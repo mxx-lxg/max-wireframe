@@ -102,23 +102,20 @@ export default function List({ id, deleteCallback }) {
 
     return (
         <div className="grid grid-cols-1">
-            <div className="grid grid-cols-2">
-                <p>id: {id}</p>
-                <button
-                    className="bg-gray-900 text-white rounded-md px-1 py-1 text-sm font-medium"
-                    onClick={() => { deleteCallback(id) }}
-                >Liste löschen</button>
-            </div>
-            <div className="border-b py-2">
+            <div className="grid grid-flow-col grid-cols-auto border-b py-2">
                 <input
-                    className="outline border rounded-md px-3 py-2 text-sm font-medium"
+                    className="block w-full rounded-md border-0 py-2 px-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     type="text"
-                    defaultValue="neue Liste"
+                    placeholder="neue Liste"
                     ref={inputRef}
                     maxLength="150"
                     onChange={
                         e => setTitle(e.target.value)
                     }></input>
+                    <button
+                        className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 text-sm font-medium"
+                        onClick={() => { deleteCallback(id) }}
+                    >❌</button>
             </div>
 
             <DndContext
@@ -127,9 +124,9 @@ export default function List({ id, deleteCallback }) {
                 onDragEnd={handleDragEnd}
             >
                 <button
-                    className="bg-gray-200 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
+                    className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
                     onClick={() => { addCard(0) }}
-                >neue Karte</button>
+                >➕</button>
 
                 <SortableContext
                     items={cards}
@@ -142,9 +139,9 @@ export default function List({ id, deleteCallback }) {
                             id={card.id}
                             deleteCallback={deleteCard}>
                                 <button
-                                    className="bg-gray-200 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
+                                    className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
                                     onClick={() => { addCard(index) }}
-                                >neue Karte</button>
+                                >➕</button>
                             </Card>
                         )
                     })}

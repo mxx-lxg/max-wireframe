@@ -1,7 +1,7 @@
 import { useState } from "react";
 import List from './List';
 
-export default function Board() {
+export default function Board(props) {
     const [lists, newList] = useState([]);
 
     //neue Liste anlegen
@@ -43,31 +43,34 @@ export default function Board() {
     }
 
     return (
-        <div className="grid grid-flow-col auto-cols-auto">
-            <button
-                className="bg-gray-200 text-gray-900 px-1 py-1 text-sm font-medium"
-                onClick={() => { addList(0) }}>
-                neue Liste
-            </button>
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Board #{props.id}</h1>
+            <div className="grid grid-flow-col auto-cols-auto">
+                <button
+                    className="bg-gray-100 text-gray-900 px-1 py-1 text-sm font-medium"
+                    onClick={() => { addList(0) }}>
+                    ➕
+                </button>
 
-            {lists.map((list, index) => {
-                return (
-                    <div key={list.id} className="grid grid-flow-col auto-cols-auto">
-                        <div className="border px-3 py-2">
-                            <List
-                                id={list.id}
-                                deleteCallback={deleteList}
-                            />
+                {lists.map((list, index) => {
+                    return (
+                        <div key={list.id} className="grid grid-flow-col auto-cols-auto">
+                            <div className="border px-3 py-2">
+                                <List
+                                    id={list.id}
+                                    deleteCallback={deleteList}
+                                />
+                            </div>
+                            <button
+                                className="bg-gray-100 text-gray-900 px-1 py-1 text-sm font-medium"
+                                onClick={() => { addList(index) }}>
+                                ➕
+                            </button>
+
                         </div>
-                        <button
-                            className="bg-gray-200 text-gray-900 px-1 py-1 text-sm font-medium"
-                            onClick={() => { addList(index) }}>
-                            neue Liste
-                        </button>
-
-                    </div>
-                )
-            })}
+                    )
+                })}
+            </div>
         </div>
     );
 }

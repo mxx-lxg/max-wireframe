@@ -33,12 +33,14 @@ export default function Card(props) {
 
     return (
         <div className="grid grid-cols-1">
-            <div id={props.id} className="grid grid-flow-col border rounded-md px-4 py-2 bg-white"
+            <div id={props.id} className="grid grid-flow-col border rounded-md bg-white"
                 ref={setNodeRef}
                 style={style}
                 {...attributes}>
-                    <p 
-                {...listeners}>id: {props.id}</p>
+                <button
+                    {...listeners}
+                    className="bg-gray-100 text-gray-900 rounded-md px-3 py-1 text-sm font-medium"
+                >↕️</button>
                 <textarea
                     className="block w-full rounded-md border-0 py-2 px-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     placeholder="leere Karte"
@@ -47,9 +49,9 @@ export default function Card(props) {
                         e => setText(e.target.value)
                     }></textarea >
                 <button
-                    className="block text-sm font-medium leading-6 text-gray-900 px-2 py-2 text-center"
+                    className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 text-sm font-medium"
                     onClick={() => { props.deleteCallback(props.id) }}
-                >löschen</button>
+                >❌</button>
             </div>
             {props.children}
         </div>

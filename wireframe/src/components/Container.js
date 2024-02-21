@@ -30,10 +30,10 @@ export default function Container() {
                 </div>
             </nav>
             <ul role="list" className="divide-y divide-gray-100">
-                {boards.map((board) => {
+                {boards.map((board, index) => {
                     return (
                         <li className="flex justify-between gap-x-6 py-5" key={board.id}>
-                            <Board />
+                            <Board id={index} />
                         </li>
                     )
                 })}
