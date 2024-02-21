@@ -17,16 +17,26 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+//eigene Components
 import Card from './Card';
 import Alert from './Alert';
 
+//Listen Component
 export default function List(props) {
+    //Listentitel
     const [title, changeTitle] = useState("");
+
+    //Karten in der Liste
     const [cards, setCards] = useState([]);
+
+    //States zum Löschen von Karten
     const [alert, setAlert] = useState(false);
     const [deleteSelect, setDeleteSelect] = useState(null);
 
+    //Referenz für Textfeld Fokus
     const inputRef = useRef();
+
+    //DND Hooks
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -42,26 +52,27 @@ export default function List(props) {
         transition,
     } = useSortable({ id: props.id });
 
+    //CSS Style für DND Effekte
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
 
-
-
+    //Beim Anlegen Textfeld fokusieren
     useEffect(() => {
         inputRef.current.focus();
     }, []);
 
+    //Titel im State speichern
     function setTitle(value) {
         changeTitle(value)
-        console.log("title Titel geändert", title)
     }
 
+    //Karte absetzeb
     function handleDragEnd(event) {
         const { active, over } = event;
 
-
+        //Karte im Array an neue Position setzen
         if (active.id !== over.id) {
             setCards((cards) => {
                 const oldIndex = cards.findIndex(e => e.id === active.id);
@@ -90,13 +101,14 @@ export default function List(props) {
         console.log('neue Karte angelegt', cards);
     }
 
-    //Karte löschen
+    //löschwarnung anzeigen
     function deleteCardPrompt(id){
         setDeleteSelect(id);
         console.log("showin prompt");
         setAlert(true);
     }
-    
+
+    //Karte löschen
     function deleteCard(id) {
         const targetIndex = cards.findIndex(index => index.id === id);
 

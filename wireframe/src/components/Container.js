@@ -1,8 +1,12 @@
 import { useState } from "react";
+
+//eigene Components
 import Board from './Board';
 import Alert from "./Alert";
 
+//Container für gesamte App
 export default function Container() {
+    //Boards
     const [boards, newBoard] = useState([]);
 
     //Board anlegen
@@ -24,7 +28,8 @@ export default function Container() {
                     <div className="relative flex h-16 items-center justify-between">
                         <button
                             className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
-                            onClick={addBoard}>
+                            onClick={addBoard}
+                            >
                             neues Board
                         </button>
                     </div>

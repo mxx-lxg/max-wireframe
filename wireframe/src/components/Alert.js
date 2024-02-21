@@ -1,4 +1,4 @@
-
+//Modal für die Löschbestätigung
 export default function Alert(props) {
     const style = {
         visibility: props.show ? "visible" : "hidden"
