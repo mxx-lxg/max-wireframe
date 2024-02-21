@@ -1,10 +1,34 @@
 import { useState, useEffect, useRef } from "react";
+import {
+    DndContext,
+    closestCenter,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
 import Card from './Card';
 
 export default function List({ id, deleteCallback }) {
     const [title, changeTitle] = useState("");
-    const [cards, newCard] = useState([]);
+    const [cards, setCards] = useState([]);
     const inputRef = useRef();
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+
 
     useEffect(() => {
         inputRef.current.focus();
@@ -15,13 +39,35 @@ export default function List({ id, deleteCallback }) {
         console.log("title Titel geändert", title)
     }
 
+    function handleDragEnd(event) {
+        const { active, over } = event;
+
+
+        if (active.id !== over.id) {
+            setCards((cards) => {
+                const oldIndex = cards.findIndex( e => e.id === active.id);
+                const newIndex = cards.findIndex( e => e.id === over.id);
+
+                console.log("moved" , oldIndex, newIndex)
+                return arrayMove(cards, oldIndex, newIndex);
+            });
+        }
+    }
+
+    //Karte neu positionieren
+    function repositionCard(oldPos, newPos) {
+        var card = cards[oldPos];
+        cards.splice(oldPos, 1);
+        cards.splice(newPos, 0, card);
+
+    }
 
     //neue Karte anlegen
     function addCard(index) {
         const pre = cards.slice(0, index + 1);
         const post = cards.slice(index + 1, cards.length);
 
-        newCard([
+        setCards([
             ...pre,
             {
                 id: generateId(),
@@ -42,7 +88,7 @@ export default function List({ id, deleteCallback }) {
         const pre = cards.slice(0, targetIndex);
         const post = cards.slice(targetIndex + 1, cards.length);
 
-        newCard([
+        setCards([
             ...pre,
             ...post
         ])
@@ -74,24 +120,36 @@ export default function List({ id, deleteCallback }) {
                         e => setTitle(e.target.value)
                     }></input>
             </div>
+
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+            >
                 <button
                     className="bg-gray-200 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
                     onClick={() => { addCard(0) }}
                 >neue Karte</button>
 
-            {cards.map((card, index) => {
-                return (
-                    <div key={card.id} className="grid grid-cols-1">
-                        <Card
+                <SortableContext
+                    items={cards}
+                    strategy={verticalListSortingStrategy}
+                >
+                    {cards.map((card, index) => {
+                        return (                            
+                            <Card
+                            key={card.id}
                             id={card.id}
-                            deleteCallback={deleteCard} />
-                        <button
-                            className="bg-gray-200 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
-                            onClick={() => { addCard(index) }}
-                        >neue Karte</button>
-                    </div>
-                )
-            })}
+                            deleteCallback={deleteCard}>
+                                <button
+                                    className="bg-gray-200 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
+                                    onClick={() => { addCard(index) }}
+                                >neue Karte</button>
+                            </Card>
+                        )
+                    })}
+                </SortableContext>
+            </DndContext>
         </div>
     );
 }
