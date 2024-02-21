@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Board from './Board';
+import Alert from "./Alert";
 
 export default function Container() {
     const [boards, newBoard] = useState([]);

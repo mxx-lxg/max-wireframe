@@ -18,10 +18,14 @@ import {
 } from '@dnd-kit/sortable';
 
 import Card from './Card';
+import Alert from './Alert';
 
 export default function List(props) {
     const [title, changeTitle] = useState("");
     const [cards, setCards] = useState([]);
+    const [alert, setAlert] = useState(false);
+    const [deleteSelect, setDeleteSelect] = useState(null);
+
     const inputRef = useRef();
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -87,6 +91,12 @@ export default function List(props) {
     }
 
     //Karte löschen
+    function deleteCardPrompt(id){
+        setDeleteSelect(id);
+        console.log("showin prompt");
+        setAlert(true);
+    }
+    
     function deleteCard(id) {
         const targetIndex = cards.findIndex(index => index.id === id);
 
@@ -113,6 +123,21 @@ export default function List(props) {
             style={style}
             {...attributes}
             className="grid grid-cols-1 bg-white border-b py-2">
+            <Alert 
+                show={alert} 
+                title="Karte wird gelöscht" 
+                text="Wollen Sie diese Karte wirklich löschen?" 
+            >
+                <button type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    onClick={e => {
+                        setAlert(false);
+                        deleteCard(deleteSelect);
+                    }}
+                >Löschen</button>
+                <button type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    onClick={e => setAlert(false)}
+                >Abbrechen</button>
+            </Alert>
             <div
                 className="grid grid-flow-col grid-cols-auto">
                 <button
@@ -153,7 +178,7 @@ export default function List(props) {
                             <Card
                                 key={card.id}
                                 id={card.id}
-                                deleteCallback={deleteCard}>
+                                deleteCallback={deleteCardPrompt}>
                                 <button
                                     className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
                                     onClick={() => { addCard(index) }}
