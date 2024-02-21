@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
     DndContext,
     closestCenter,
@@ -17,7 +19,7 @@ import {
 
 import Card from './Card';
 
-export default function List({ id, deleteCallback }) {
+export default function List(props) {
     const [title, changeTitle] = useState("");
     const [cards, setCards] = useState([]);
     const inputRef = useRef();
@@ -27,6 +29,19 @@ export default function List({ id, deleteCallback }) {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+    } = useSortable({ id: props.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
 
 
@@ -45,21 +60,13 @@ export default function List({ id, deleteCallback }) {
 
         if (active.id !== over.id) {
             setCards((cards) => {
-                const oldIndex = cards.findIndex( e => e.id === active.id);
-                const newIndex = cards.findIndex( e => e.id === over.id);
+                const oldIndex = cards.findIndex(e => e.id === active.id);
+                const newIndex = cards.findIndex(e => e.id === over.id);
 
-                console.log("moved" , oldIndex, newIndex)
+                console.log("moved", oldIndex, newIndex)
                 return arrayMove(cards, oldIndex, newIndex);
             });
         }
-    }
-
-    //Karte neu positionieren
-    function repositionCard(oldPos, newPos) {
-        var card = cards[oldPos];
-        cards.splice(oldPos, 1);
-        cards.splice(newPos, 0, card);
-
     }
 
     //neue Karte anlegen
@@ -101,8 +108,17 @@ export default function List({ id, deleteCallback }) {
     }
 
     return (
-        <div className="grid grid-cols-1">
-            <div className="grid grid-flow-col grid-cols-auto border-b py-2">
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            className="grid grid-cols-1 bg-white border-b py-2">
+            <div
+                className="grid grid-flow-col grid-cols-auto">
+                <button
+                    {...listeners}
+                    className="bg-gray-100 text-gray-900 rounded-md px-3 py-1 text-md font-bold"
+                >↔️</button>
                 <input
                     className="block w-full rounded-md border-0 py-2 px-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     type="text"
@@ -112,10 +128,10 @@ export default function List({ id, deleteCallback }) {
                     onChange={
                         e => setTitle(e.target.value)
                     }></input>
-                    <button
-                        className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 text-sm font-medium"
-                        onClick={() => { deleteCallback(id) }}
-                    >❌</button>
+                <button
+                    className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 text-sm font-medium"
+                    onClick={() => { props.deleteCallback(props.id) }}
+                >❌</button>
             </div>
 
             <DndContext
@@ -133,11 +149,11 @@ export default function List({ id, deleteCallback }) {
                     strategy={verticalListSortingStrategy}
                 >
                     {cards.map((card, index) => {
-                        return (                            
+                        return (
                             <Card
-                            key={card.id}
-                            id={card.id}
-                            deleteCallback={deleteCard}>
+                                key={card.id}
+                                id={card.id}
+                                deleteCallback={deleteCard}>
                                 <button
                                     className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
                                     onClick={() => { addCard(index) }}
