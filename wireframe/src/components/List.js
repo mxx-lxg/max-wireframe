@@ -86,8 +86,8 @@ export default function List(props) {
 
     //neue Karte anlegen
     function addCard(index) {
-        const pre = cards.slice(0, index + 1);
-        const post = cards.slice(index + 1, cards.length);
+        const pre = cards.slice(0, index);
+        const post = cards.slice(index, cards.length);
 
         setCards([
             ...pre,
@@ -102,7 +102,7 @@ export default function List(props) {
     }
 
     //löschwarnung anzeigen
-    function deleteCardPrompt(id){
+    function deleteCardPrompt(id) {
         setDeleteSelect(id);
         console.log("showin prompt");
         setAlert(true);
@@ -135,10 +135,10 @@ export default function List(props) {
             style={style}
             {...attributes}
             className="grid grid-cols-1 bg-white border-b py-2">
-            <Alert 
-                show={alert} 
-                title="Karte wird gelöscht" 
-                text="Wollen Sie diese Karte wirklich löschen?" 
+            <Alert
+                show={alert}
+                title="Karte wird gelöscht"
+                text="Wollen Sie diese Karte wirklich löschen?"
             >
                 <button type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                     onClick={e => {
@@ -190,10 +190,11 @@ export default function List(props) {
                             <Card
                                 key={card.id}
                                 id={card.id}
-                                deleteCallback={deleteCardPrompt}>
+                                deleteCallback={deleteCardPrompt}
+                            >
                                 <button
                                     className="bg-gray-100 text-gray-900 rounded-md px-1 py-1 my-2 text-sm font-medium"
-                                    onClick={() => { addCard(index) }}
+                                    onClick={() => { addCard(index+1) }}
                                 >➕</button>
                             </Card>
                         )
