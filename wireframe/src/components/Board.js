@@ -53,8 +53,8 @@ export default function Board(props) {
 
     //neue Liste an bestimmter anlegen
     function addList(index) {
-        const preList = lists.slice(0, index + 1);
-        const postList = lists.slice(index + 1, lists.length);
+        const preList = lists.slice(0, index);
+        const postList = lists.slice(index, lists.length);
 
         setLists([
             ...preList,
@@ -152,7 +152,7 @@ export default function Board(props) {
                                     </div>
                                     <button
                                         className="bg-gray-100 text-gray-900 px-1 py-1 text-sm font-medium"
-                                        onClick={() => { addList(index) }}
+                                        onClick={() => { addList(index+1) }}
                                     >
                                         ➕
                                     </button>
