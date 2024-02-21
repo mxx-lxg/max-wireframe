@@ -45,7 +45,7 @@ export default function Board() {
     return (
         <div className="grid grid-flow-col auto-cols-auto">
             <button
-                className="bg-gray-900 text-white rounded-md px-1 py-1 text-sm font-medium"
+                className="bg-gray-200 text-gray-900 px-1 py-1 text-sm font-medium"
                 onClick={() => { addList(0) }}>
                 neue Liste
             </button>
@@ -53,14 +53,14 @@ export default function Board() {
             {lists.map((list, index) => {
                 return (
                     <div key={list.id} className="grid grid-flow-col auto-cols-auto">
-                        <div className="rounded-md outline px-3 py-2">
+                        <div className="border px-3 py-2">
                             <List
                                 id={list.id}
                                 deleteCallback={deleteList}
                             />
                         </div>
                         <button
-                            className="bg-gray-900 text-white rounded-md px-1 py-1 text-sm font-medium"
+                            className="bg-gray-200 text-gray-900 px-1 py-1 text-sm font-medium"
                             onClick={() => { addList(index) }}>
                             neue Liste
                         </button>
